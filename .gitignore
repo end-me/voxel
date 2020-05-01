@@ -1,0 +1,7 @@
+main
+Voxel
+*.so
+*.dll
+*.pdb
+*.exe
+*.ilk
