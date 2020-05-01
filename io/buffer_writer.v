@@ -67,6 +67,18 @@ pub fn (writer mut BufferWriter) write_long(l i64) {
 	writer.buf << byte(v)
 }
 
+pub fn (writer mut BufferWriter) write_ulong(l u64) {
+	mut v := l
+	writer.buf << byte(v>>56)
+	writer.buf << byte(v>>48)
+	writer.buf << byte(v>>40)
+	writer.buf << byte(v>>32)
+	writer.buf << byte(v>>24)
+	writer.buf << byte(v>>16)
+	writer.buf << byte(v>>8)
+	writer.buf << byte(v)
+}
+
 pub fn (writer mut BufferWriter) write_short(l i16) {
 	mut v := l
 	writer.buf << byte(v>>8)
