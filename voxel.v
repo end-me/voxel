@@ -1,6 +1,7 @@
 module main
 
-import io
+import server
 
 fn main() {
+	server.new(4088)
 }
