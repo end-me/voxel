@@ -2,11 +2,13 @@ module server
 
 import net
 import packets
+import world
 
 struct Server {
 	server net.Socket
 	port int
 mut:
+	world_manager world.WorldManager
 	player []Player
 	running bool
 }
@@ -14,6 +16,9 @@ mut:
 pub fn new(port int) {
 	sock := net.listen(port) or { panic(err) }
 	mut server := Server{sock, port}
+	world_manager := world.create_world_manager(&server)
+	server.world_manager = world_manager
+	world_manager.create_world('world', world.Dimension.Overworld)
 	server.running = true
 	server.listen()
 }

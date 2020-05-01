@@ -55,6 +55,11 @@ pub fn (writer mut BufferWriter) write_string(str string) {
 	writer.buf << buf
 }
 
+pub fn (writer mut BufferWriter) write_string_enum(str string) {
+	buf := str.bytes()
+	writer.write_var_int(buf.len)
+}
+
 pub fn (writer mut BufferWriter) write_long(l i64) {
 	mut v := l
 	writer.buf << byte(v>>56)
@@ -79,10 +84,30 @@ pub fn (writer mut BufferWriter) write_ulong(l u64) {
 	writer.buf << byte(v)
 }
 
+pub fn (writer mut BufferWriter) write_int(i int) {
+	mut v := i
+	writer.buf << byte(v>>24)
+	writer.buf << byte(v>>16)
+	writer.buf << byte(v>>8)
+	writer.buf << byte(v)
+}
+
 pub fn (writer mut BufferWriter) write_short(l i16) {
 	mut v := l
 	writer.buf << byte(v>>8)
 	writer.buf << byte(v)
+}
+
+pub fn (writer mut BufferWriter) write_byte(b byte) {
+	writer.buf << b
+}
+
+pub fn (writer mut BufferWriter) write_bool(b bool) {
+	if b {
+		writer.buf << byte(0x01)
+	} else {
+		writer.buf << byte(0x00)
+	}
 }
 
 pub fn (writer mut BufferWriter) flush(id int) []byte {
