@@ -110,6 +110,10 @@ pub fn (writer mut BufferWriter) write_bool(b bool) {
 	}
 }
 
+pub fn (writer mut BufferWriter) write(b []byte) {
+	writer.buf << b
+}
+
 pub fn (writer mut BufferWriter) flush(id int) []byte {
 	mut buf := writer.buf.clone()
 	writer.create_empty()
