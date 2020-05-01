@@ -1,5 +1,6 @@
 module main
 
+import io
+
 fn main() {
-	println('Hello World !')
 }
