@@ -110,6 +110,11 @@ pub fn (writer mut BufferWriter) write_bool(b bool) {
 	}
 }
 
+pub fn (writer mut BufferWriter) write_array(b []byte) {
+	writer.write_var_int(b.len)
+	writer.buf << b
+}
+
 pub fn (writer mut BufferWriter) write(b []byte) {
 	writer.buf << b
 }
@@ -133,4 +138,8 @@ pub fn (writer mut BufferWriter) flush(id int) []byte {
 	buf_len << buf
 
 	return buf_len
+}
+
+pub fn (writer mut BufferWriter) to_buffer() []byte {
+	return writer.buf
 }

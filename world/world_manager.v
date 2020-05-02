@@ -43,7 +43,7 @@ pub fn (man mut WorldManager) create_world(name string, dim Dimension) {
 
 	for x := 0; x < 16; x++ {
 		for z := 0; z < 16; z++ {
-			block := block.create_block(x, 0, z, 1)
+			block := block.create_block(x, 0, z, 1, 0)
 			section.set_block(block)
 		}
 	}

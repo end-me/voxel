@@ -34,3 +34,13 @@ pub fn (conn mut server.Connection) write_held_item_change() {
 		conn.sock.send(data, 1) or { panic(err) }
 	}
 }
+
+pub fn (conn mut server.Connection) write_chunk(x, z int, server &server.Server) {
+	world := server.world_manager.get_world('world') or { panic(err) }
+	chunk := world.get_chunk(x, z)
+	buf := chunk.to_buffer()
+
+	for data in buf {
+		conn.sock.send(data, 1) or { panic(err) }
+	}
+}

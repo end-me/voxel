@@ -70,15 +70,15 @@ fn (conn mut Connection) handle_login(server &Server) {
 
 	for {
 		reader, len, pkt_id := packets.read_packet(conn.sock) or { break }
-
-		conn.handle_play_packet(reader, len, pkt_id, player)
+		conn.handle_play_packet(reader, len, pkt_id, player, server)
 	}
 }
 
-fn (conn mut Connection) handle_play_packet(reader io.BufferReader, len int, pkt_id int, player Player) {
+fn (conn mut Connection) handle_play_packet(reader io.BufferReader, len int, pkt_id int, player Player, server &Server) {
 	println('Received play packet 0x$pkt_id with len of $len')
 	match pkt_id {
 		5 {
+			conn.write_chunk(0, 0, server)
 			conn.write_held_item_change()
 		}
 		else {
