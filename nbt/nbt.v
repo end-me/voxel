@@ -1,19 +1,20 @@
 module nbt
-
+/*
 type Typ = byte
+type Nbt = NbtEnd | NbtByte | NbtShort | NbtInt | NbtLong | NbtFloat | NbtDouble | NbtByteArray | NbtCompound | NbtIntArray | NbtLongArray | INbt
 
-interface Nbt {
+interface INbt {
 	typ() Typ
 	name() string
 }
 
 struct NbtEnd {}
 
-pub fn (n NbtByte) typ() Typ {
-	return 0
+pub fn (n NbtEnd) typ() Typ {
+	return Typ(0)
 }
 
-pub fn (n NbtByte) name() string {
+pub fn (n NbtEnd) name() string {
 	return 'TAG_End'
 }
 
@@ -22,7 +23,7 @@ struct NbtByte {
 }
 
 pub fn (n NbtByte) typ() Typ {
-	return 1
+	return Typ(1)
 }
 
 pub fn (n NbtByte) name() string {
@@ -34,7 +35,7 @@ struct NbtShort {
 }
 
 pub fn (n NbtShort) typ() Typ {
-	return 2
+	return Typ(2)
 }
 
 pub fn (n NbtShort) name() string {
@@ -46,7 +47,7 @@ struct NbtInt {
 }
 
 pub fn (n NbtInt) typ() Typ {
-	return 3
+	return Typ(3)
 }
 
 pub fn (n NbtInt) name() string {
@@ -58,7 +59,7 @@ struct NbtLong {
 }
 
 pub fn (n NbtLong) typ() Typ {
-	return 4
+	return Typ(4)
 }
 
 pub fn (n NbtLong) name() string {
@@ -70,7 +71,7 @@ struct NbtFloat {
 }
 
 pub fn (n NbtFloat) typ() Typ {
-	return 5
+	return Typ(5)
 }
 
 pub fn (n NbtFloat) name() string {
@@ -82,7 +83,7 @@ struct NbtDouble {
 }
 
 pub fn (n NbtDouble) typ() Typ {
-	return 6
+	return Typ(6)
 }
 
 pub fn (n NbtDouble) name() string {
@@ -94,7 +95,7 @@ struct NbtByteArray {
 }
 
 pub fn (n NbtByteArray) typ() Typ {
-	return 7
+	return Typ(7)
 }
 
 pub fn (n NbtByteArray) name() string {
@@ -106,7 +107,7 @@ struct NbtString {
 }
 
 pub fn (n NbtString) typ() Typ {
-	return 8
+	return Typ(8)
 }
 
 pub fn (n NbtString) name() string {
@@ -119,7 +120,7 @@ struct NbtAnyArray {
 }
 
 pub fn (n NbtAnyArray) typ() Typ {
-	return 9
+	return Typ(9)
 }
 
 pub fn (n NbtAnyArray) name() string {
@@ -128,11 +129,12 @@ pub fn (n NbtAnyArray) name() string {
 
 struct NbtCompound {
 	named string
+mut:
 	val map[string]Nbt
 }
 
 pub fn (n NbtCompound) typ() Typ {
-	return 10
+	return Typ(10)
 }
 
 pub fn (n NbtCompound) name() string {
@@ -143,8 +145,8 @@ pub fn (n mut NbtCompound) set(name string, data Nbt) {
 	n.val[name] = data
 }
 
-pub fn (n NbtCompound) Get(name string) Nbt {
-	nbt = n.val[name]
+pub fn (n NbtCompound) get(name string) Nbt {
+	nbt := n.val[name]
 	return nbt
 }
 
@@ -152,11 +154,11 @@ struct NbtIntArray {
 	val []i32
 }
 
-pub fn (n NbtByteArray) typ() Typ {
-	return 11
+pub fn (n NbtIntArray) typ() Typ {
+	return Typ(11)
 }
 
-pub fn (n NbtByteArray) name() string {
+pub fn (n NbtIntArray) name() string {
 	return 'TAG_Int_Array'
 }
 
@@ -164,11 +166,11 @@ struct NbtLongArray {
 	val []i64
 }
 
-pub fn (n NbtByteArray) typ() Typ {
-	return 12
+pub fn (n NbtLongArray) typ() Typ {
+	return Typ(12)
 }
 
-pub fn (n NbtByteArray) name() string {
+pub fn (n NbtLongArray) name() string {
 	return 'TAG_Long_Array'
 }
-
+*/

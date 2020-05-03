@@ -29,10 +29,16 @@ pub fn (conn mut server.Connection) write_held_item_change() {
 	conn.sock.send(buf.data, buf.len) or { panic(err) }
 }
 
-pub fn (conn mut server.Connection) write_chunk(x, z int, server &server.Server) {
+pub fn (conn mut server.Connection) write_chunk(x, z int, server &server.Server, protocol_ver int) {
 	world := server.world_manager.get_world('world') or { panic(err) }
 	chunk := world.get_chunk(x, z)
-	buf := chunk.to_buffer()
+	mut buf := []byte{}
+
+	if protocol_ver < 207 {
+		buf = chunk.to_old_buffer()
+	} else {
+		buf = chunk.to_buffer()
+	}
 
 	conn.sock.send(buf.data, buf.len) or { panic(err) }
 }

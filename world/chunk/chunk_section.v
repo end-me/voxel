@@ -93,6 +93,10 @@ pub fn (section mut ChunkSection) is_empty() bool {
 	return section.block_sections.len <= 0
 }
 
+pub fn (section mut ChunkSection) to_old_buffer() []byte {
+	return []byte
+}
+
 pub fn (section mut ChunkSection) to_buffer() []byte {
 	writer := io.create_buf_writer()
 	writer.create_empty()

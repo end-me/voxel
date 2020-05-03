@@ -30,7 +30,7 @@ pub fn handle_connection(sock net.Socket, server &Server) {
 			conn.handle_status(json)
 		}
 		(packets.State.Login) {
-			conn.handle_login(server)
+			conn.handle_login(server, conn.udata.protocol_ver)
 		}
 		else {
 			println('Something went wrong')
@@ -50,7 +50,7 @@ fn (conn mut Connection) handle_status(json string) {
 	conn.write_status_pong(status_ping.payload)
 }
 
-fn (conn mut Connection) handle_login(server &Server) {
+fn (conn mut Connection) handle_login(server &Server, protocol_ver int) {
 	rand.seed(time.now().unix)
 	login_start := conn.read_login_start()
 
@@ -70,15 +70,15 @@ fn (conn mut Connection) handle_login(server &Server) {
 
 	for {
 		reader, len, pkt_id := packets.read_packet(conn.sock) or { break }
-		conn.handle_play_packet(reader, len, pkt_id, player, server)
+		conn.handle_play_packet(reader, len, pkt_id, player, server, protocol_ver)
 	}
 }
 
-fn (conn mut Connection) handle_play_packet(reader io.BufferReader, len int, pkt_id int, player Player, server &Server) {
+fn (conn mut Connection) handle_play_packet(reader io.BufferReader, len int, pkt_id int, player Player, server &Server, protocol_ver int) {
 	println('Received play packet 0x$pkt_id with len of $len')
 	match pkt_id {
 		5 {
-			conn.write_chunk(0, 0, server)
+			conn.write_chunk(0, 0, server, protocol_ver)
 			conn.write_held_item_change()
 		}
 		else {

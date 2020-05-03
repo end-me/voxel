@@ -1,6 +1,6 @@
 module io
 
-import nbt
+//import nbt
 
 struct BufferWriter {
 mut:
@@ -29,6 +29,7 @@ pub fn (writer mut BufferWriter) write_var_int(val int) {
 			tmp |= 0b10000000
 		}
 		writer.buf << byte(tmp)
+		println(data)
 		if data == 0 {
 			break
 		}
@@ -114,7 +115,9 @@ pub fn (writer mut BufferWriter) write_bool(b bool) {
 
 pub fn (writer mut BufferWriter) write_array(b []byte) {
 	writer.write_var_int(b.len)
-	writer.buf << b
+	if b.len > 0 {
+		writer.buf << b
+	}
 }
 
 pub fn (writer mut BufferWriter) write_position(x, y, z int) {
@@ -122,6 +125,15 @@ pub fn (writer mut BufferWriter) write_position(x, y, z int) {
 	writer.buf << b
 }
 
+pub fn (writer mut BufferWriter) write_empty_heightmap() {
+	writer.write_byte(byte(10))
+	writer.write_byte(0)
+	writer.write_byte(0)
+	writer.write_byte(byte(12))
+	writer.write_nbt_text('MOTION_BLOCKING')
+	writer.write_int(0)
+}
+/*
 pub fn (writer mut BufferWriter) write_nbt(data nbt.NbtCompound) {
 	writer.write_byte(byte(data.typ()))
 	writer.write_byte(0)
@@ -130,20 +142,22 @@ pub fn (writer mut BufferWriter) write_nbt(data nbt.NbtCompound) {
 }
 
 fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
-	match data.typ() {
+	match (data as nbt.INbt).typ() {
 		0 {
 
 		}
 		1 {
-			writer.write_byte(byte(data.val))
+			writer.write_byte(byte((data as nbt.NbtByte).val))
 		}
 		10 {
-			for name in data.val {
-				tag := data.val[name]
+			for name in (data as nbt.NbtCompound).val {
+				tag := (data as nbt.NbtCompound).val[string(name)]
 
-				writer.write_byte(byte(tag.typ()))
+				writer.write_byte(byte((tag as nbt.INbt).typ()))
 
-				if tag.typ() == 0 {
+				typ := (tag as nbt.INbt).typ()
+
+				if byte(typ) == 0 {
 					continue
 				}
 
@@ -152,7 +166,7 @@ fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
 			}
 		}
 		12 {
-			val := data.val
+			val := (data as nbt.NbtLongArray).val
 			writer.write_int(val.len)
 
 			for v in val {
@@ -163,10 +177,16 @@ fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
 			panic('unimplemented')
 		}
 	}
-}
+}*/
 
 fn (writer mut BufferWriter) write_nbt_text(data string) {
+	println(data.len)
 	writer.write_short(data.len)
+	for a in data.bytes() {
+		char := byte(a)
+		d := int(char)
+		println('$char -> $d')
+	}
 	writer.buf << data.bytes()
 }
 
