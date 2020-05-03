@@ -2,6 +2,7 @@ module chunk
 
 import world.block
 import io
+import nbt
 
 struct Chunk {
 	x int
@@ -9,6 +10,7 @@ struct Chunk {
 	full_chunk bool
 mut:
 	sections []ChunkSection
+	height_map_data nbt.Compacter
 }
 
 pub fn create_chunk(x, z int, full_chunk bool) Chunk {
@@ -43,28 +45,10 @@ fn (chunk mut Chunk) create_bit_mask() int {
 	return bitmask
 }
 
-fn (chunk mut Chunk) create_heightmap() []byte {
-	mut buf := []byte{
-		len: 272,
-		cap: 256
-	}
-	for cy := 0; cy < chunk.sections.len; cy++ {
-		if chunk.contains_section(cy) {
-			section := chunk.get_section(cy)
-			for y := 0; y < 15; y++ {
-				if section.contains_block_section(y) {
-					block_section := section.get_block_section(y)
-					for block in block_section.blocks {
-						height_index := block.z * 16 + block.x
-						if buf[height_index] < block.y {
-							buf[height_index] = block.y + 1
-						}
-					}
-				}
-			}
-		}
-	}
-	return buf
+fn (chunk mut Chunk) create_heightmap() nbt.Compound {
+	compound := nbt.NbtCompound{val: map[string]nbt.Nbt}
+	compound.set('MOTION_BLOCKING', nbt.NbtLongArray{val: chunk.height_map_data.values})
+	return compound
 }
 
 fn (chunk mut Chunk) create_data_array() []byte {
@@ -88,11 +72,18 @@ pub fn (chunk mut Chunk) to_buffer() []byte {
 	writer.write_int(chunk.x)
 	writer.write_int(chunk.z)
 	writer.write_bool(chunk.full_chunk)
+	bitmask := chunk.create_bit_mask()
+	writer.write_var_int(bitmask)
+	heightmap := chunk.create_heightmap()
+	writer.write_nbt(heightmap)
+
+	biomes := []int{len: 1024, cap: 1024}
+
+	for biome in biomes {
+		writer.write_int(biome)
+	}
+	writer.write_array([]byte{})
 	writer.write_var_int(0)
-	writer.write(chunk.create_heightmap())
-	writer.write_int(0)
-	writer.write_array(chunk.create_data_array())
-	writer.write_byte(0)
 
 	return writer.flush(0x22)
 }

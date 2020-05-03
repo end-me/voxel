@@ -17,10 +17,7 @@ pub fn (conn mut server.Connection) write_join_game(entity_id int, gamemode byte
 	writer.write_bool(false)
 
 	buf := writer.flush(0x26)
-
-	for data in buf {
-		conn.sock.send(data, 1) or { panic(err) }
-	}
+	conn.sock.send(buf.data, buf.len) or { panic(err) }
 }
 
 pub fn (conn mut server.Connection) write_held_item_change() {
@@ -29,10 +26,7 @@ pub fn (conn mut server.Connection) write_held_item_change() {
 	writer.write_byte(0)
 
 	buf := writer.flush(0x40)
-
-	for data in buf {
-		conn.sock.send(data, 1) or { panic(err) }
-	}
+	conn.sock.send(buf.data, buf.len) or { panic(err) }
 }
 
 pub fn (conn mut server.Connection) write_chunk(x, z int, server &server.Server) {
@@ -40,7 +34,14 @@ pub fn (conn mut server.Connection) write_chunk(x, z int, server &server.Server)
 	chunk := world.get_chunk(x, z)
 	buf := chunk.to_buffer()
 
-	for data in buf {
-		conn.sock.send(data, 1) or { panic(err) }
-	}
+	conn.sock.send(buf.data, buf.len) or { panic(err) }
+}
+
+pub fn (conn mut server.Connection) write_spawn_pos(x, y, z int) {
+	writer := io.create_buf_writer()
+	writer.create_empty()
+	writer.write_position(x, y, z)
+
+	buf := writer.flush(0x4E)
+	conn.sock.send(buf.data, buf.len) or { panic(err) }
 }

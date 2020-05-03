@@ -31,28 +31,12 @@ pub fn (man mut WorldManager) contains_world(name string) bool {
 
 pub fn (man mut WorldManager) create_world(name string, dim Dimension) {
 	world := create_world(name, dim)
-
-	world_chunk := chunk.create_chunk(0, 0, true)
-
-	for i := 1; i < 16; i++ {
+	world_chunk := chunk.create_chunk(0, 0, false)
+	for i := 0; i < 16; i++ {
 		chunk_section := chunk.create_chunk_section(i)
 		world_chunk.set_section(chunk_section)
 	}
-
-	section := chunk.create_chunk_section(0)
-
-	for x := 0; x < 16; x++ {
-		for z := 0; z < 16; z++ {
-			block := block.create_block(x, 0, z, 1, 0)
-			section.set_block(block)
-		}
-	}
-
-	world_chunk.set_section(section)
-
+	
 	world.set_chunk(world_chunk)
-
-	world_chunk.to_buffer()
-
 	man.add_world(world)
 }

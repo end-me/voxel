@@ -1,5 +1,7 @@
 module io
 
+import nbt
+
 struct BufferWriter {
 mut:
 	buf []byte
@@ -113,6 +115,59 @@ pub fn (writer mut BufferWriter) write_bool(b bool) {
 pub fn (writer mut BufferWriter) write_array(b []byte) {
 	writer.write_var_int(b.len)
 	writer.buf << b
+}
+
+pub fn (writer mut BufferWriter) write_position(x, y, z int) {
+	b := byte(((x & 0x3FFFFFF) << 38) | ((z & 0x3FFFFFF) << 12) | (y & 0xFFF))
+	writer.buf << b
+}
+
+pub fn (writer mut BufferWriter) write_nbt(data nbt.NbtCompound) {
+	writer.write_byte(byte(data.typ()))
+	writer.write_byte(0)
+	writer.write_byte(0)
+	writer.write_nbt_data(data)
+}
+
+fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
+	match data.typ() {
+		0 {
+
+		}
+		1 {
+			writer.write_byte(byte(data.val))
+		}
+		10 {
+			for name in data.val {
+				tag := data.val[name]
+
+				writer.write_byte(byte(tag.typ()))
+
+				if tag.typ() == 0 {
+					continue
+				}
+
+				writer.write_nbt_text(name)
+				writer.write_nbt(tag)
+			}
+		}
+		12 {
+			val := data.val
+			writer.write_int(val.len)
+
+			for v in val {
+				writer.write_long(v)
+			}
+		}
+		else {
+			panic('unimplemented')
+		}
+	}
+}
+
+fn (writer mut BufferWriter) write_nbt_text(data string) {
+	writer.write_short(data.len)
+	writer.buf << data.bytes()
 }
 
 pub fn (writer mut BufferWriter) write(b []byte) {

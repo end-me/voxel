@@ -24,8 +24,5 @@ pub fn (conn mut server.Connection) write_login_succesful(uuid string, username 
 	writer.write_string(username)
 
 	buf := writer.flush(2)
-
-	for data in buf {
-		conn.sock.send(data, 1) or { panic(err) }
-	}
+	conn.sock.send(buf.data, buf.len) or { panic(err) }
 }

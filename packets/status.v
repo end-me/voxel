@@ -37,9 +37,8 @@ pub fn (conn mut server.Connection) write_status_response(json string) {
 
 	buf := writer.flush(0)
 
-	for data in buf {
-		conn.sock.send(data, 1) or { panic(err) }
-	}
+
+	conn.sock.send(buf.data, buf.len) or { panic(err) }
 }
 
 pub fn (conn mut server.Connection) write_status_pong(payload u64) {
@@ -49,8 +48,5 @@ pub fn (conn mut server.Connection) write_status_pong(payload u64) {
 	writer.write_ulong(payload)
 
 	buf := writer.flush(1)
-
-	for data in buf {
-		conn.sock.send(data, 1) or { panic(err) }
-	}
+	conn.sock.send(buf.data, buf.len) or { panic(err) }
 }
