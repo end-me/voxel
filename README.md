@@ -1,20 +1,18 @@
 <h2 align="center">Voxel</h2>
-<div align="center">
 [![Build Status](https://travis-ci.org/end-me/voxel.svg?branch=master)](https://travis-ci.org/end-me/voxel)
-</div>  
  
 ## What is voxel?
 Voxel is a minecraft server, which is written in V.
 
 ## Roadmap
-[x] Reading packets
-[x] Writing packets
-[x] Server list ping
-[] Login process
-[] Packet en-/decryption
-[] Send a chunk
-[] Play state handle
-[] Dynamic packet handler
+- [x] Reading packets
+- [x] Writing packets
+- [x] Server list ping
+- [] Login process
+- [] Packet en-/decryption
+- [] Send a chunk
+- [] Play state handle
+- [] Dynamic packet handler
 
 ## Contributing
 How to contribute to voxel?
