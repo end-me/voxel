@@ -151,7 +151,7 @@ fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
 		}
 		10 {
 			for name in (data as nbt.NbtCompound).val {
-				tag := (data as nbt.NbtCompound).val[string(name)]
+				tag := (data as nbt.NbtCompound).val[(name as nbt.INbt).name()]
 
 				writer.write_byte(byte((tag as nbt.INbt).typ()))
 
@@ -161,7 +161,7 @@ fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
 					continue
 				}
 
-				writer.write_nbt_text(name)
+				writer.write_nbt_text((name as nbt.INbt).name())
 				writer.write_nbt(tag)
 			}
 		}
