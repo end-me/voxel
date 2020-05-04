@@ -1,6 +1,10 @@
 <h2 align="center">Voxel</h2>
+<div align="center">
+
 [![Build Status](https://travis-ci.org/end-me/voxel.svg?branch=master)](https://travis-ci.org/end-me/voxel)
  
+</div>
+
 ## What is voxel?
 Voxel is a minecraft server, which is written in V.
 
