@@ -19,7 +19,7 @@ Voxel is a minecraft server, which is written in V.
 - [ ] Dynamic packet handler
 
 ## License
-MIT(https://github.com/end-me/voxel/blob/master/LICENSE)
+[MIT](https://github.com/end-me/voxel/blob/master/LICENSE)
 
 ## Contributing
 How to contribute to voxel?
