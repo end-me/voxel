@@ -12,11 +12,14 @@ Voxel is a minecraft server, which is written in V.
 - [x] Reading packets
 - [x] Writing packets
 - [x] Server list ping
-- [] Login process
-- [] Packet en-/decryption
-- [] Send a chunk
-- [] Play state handle
-- [] Dynamic packet handler
+- [ ] Login process
+- [ ] Packet en-/decryption
+- [ ] Send a chunk
+- [ ] Play state handle
+- [ ] Dynamic packet handler
+
+## License
+
 
 ## Contributing
 How to contribute to voxel?
