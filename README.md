@@ -6,14 +6,14 @@
 </div>
 
 ## What is voxel?
-Voxel is a minecraft server, which is written in V.
+Voxel is a minecraft server written using the [V programming language](https://vlang.io).
 
 ## Roadmap
 - [x] Reading packets
 - [x] Writing packets
 - [x] Server list ping
 - [ ] Login process
-- [ ] Packet en-/decryption
+- [ ] Packet encryption/decryption
 - [ ] Send a chunk
 - [ ] Play state handle
 - [ ] Dynamic packet handler
@@ -23,7 +23,7 @@ Voxel is a minecraft server, which is written in V.
 
 ## Contributing
 How to contribute to voxel?
-1. Fork this projekt
+1. Fork this project
 2. Create a branch named with your feature
-3. Write your changes and push it into your projekt
-4. Create a pull request and describe your feature
+3. Add your changes and push them onto the branch
+4. Create a pull request in which you describe the changes made
