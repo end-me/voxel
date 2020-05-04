@@ -142,39 +142,77 @@ pub fn (writer mut BufferWriter) write_nbt(data nbt.NbtCompound) {
 }
 
 fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
-	match (data as nbt.INbt).typ() {
-		0 {
-
+	match data {
+		nbt.NbtEnd {
+			
 		}
-		1 {
-			writer.write_byte(byte((data as nbt.NbtByte).val))
+		nbt.NbtByte {
+			writer.write_byte(byte(it.val))
 		}
-		10 {
-			for name in (data as nbt.NbtCompound).val {
-				tag := (data as nbt.NbtCompound).val[(name as nbt.INbt).name()]
+		nbt.NbtCompound {
+			val := it.val
+			for _, tag in val {
+				tagid := match_nbt_typ(tag)
+				tagname := match_nbt_name(tag)
+				writer.write_byte(tagid)
 
-				writer.write_byte(byte((tag as nbt.INbt).typ()))
-
-				typ := (tag as nbt.INbt).typ()
-
-				if byte(typ) == 0 {
+				if tagid == 0 {
 					continue
 				}
 
-				writer.write_nbt_text((name as nbt.INbt).name())
+				writer.write_nbt_text(tagname)
 				writer.write_nbt(tag)
 			}
 		}
-		12 {
-			val := (data as nbt.NbtLongArray).val
-			writer.write_int(val.len)
+		nbt.NbtLongArray {
+			writer.write_int(it.val.len)
 
-			for v in val {
+			for v in it.val {
 				writer.write_long(v)
 			}
 		}
 		else {
 			panic('unimplemented')
+		}
+	}
+}
+
+fn match_nbt_typ(nbt nbt.Nbt) byte {
+	match nbt {
+		nbt.NbtEnd {
+			return byte(it.typ())
+		}
+		nbt.NbtByte {
+			return byte(it.typ())
+		}
+		nbt.NbtCompound {
+			return byte(it.typ())
+		}
+		nbt.NbtLongArray {
+			return byte(it.typ())
+		}
+		else {
+			return -1
+		}
+	}
+}
+
+fn match_nbt_name(nbt nbt.Nbt) string {
+	match nbt {
+		nbt.NbtEnd {
+			return it.name()
+		}
+		nbt.NbtByte {
+			return it.name()
+		}
+		nbt.NbtCompound {
+			return it.name()
+		}
+		nbt.NbtLongArray {
+			return it.name()
+		}
+		else {
+			return ''
 		}
 	}
 }

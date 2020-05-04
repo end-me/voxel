@@ -1,12 +1,13 @@
 module nbt
 
 type Typ = byte
-type Nbt = NbtEnd | NbtByte | NbtShort | NbtInt | NbtLong | NbtFloat | NbtDouble | NbtByteArray | NbtCompound | NbtIntArray | NbtLongArray | INbt
 
-interface INbt {
+interface Nbt {
 	typ() Typ
 	name() string
 }
+
+fn ui(t Nbt) {}
 
 struct NbtEnd {}
 
