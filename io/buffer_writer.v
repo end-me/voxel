@@ -1,6 +1,6 @@
 module io
 
-//import nbt
+import nbt
 
 struct BufferWriter {
 mut:
@@ -133,7 +133,7 @@ pub fn (writer mut BufferWriter) write_empty_heightmap() {
 	writer.write_nbt_text('MOTION_BLOCKING')
 	writer.write_int(0)
 }
-/*
+
 pub fn (writer mut BufferWriter) write_nbt(data nbt.NbtCompound) {
 	writer.write_byte(byte(data.typ()))
 	writer.write_byte(0)
@@ -177,7 +177,7 @@ fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
 			panic('unimplemented')
 		}
 	}
-}*/
+}
 
 fn (writer mut BufferWriter) write_nbt_text(data string) {
 	println(data.len)

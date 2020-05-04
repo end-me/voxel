@@ -1,8 +1,6 @@
 module world
 
 import server
-import world.chunk
-import world.block
 
 struct WorldManager {
 	server &server.Server
@@ -30,13 +28,4 @@ pub fn (man mut WorldManager) contains_world(name string) bool {
 }
 
 pub fn (man mut WorldManager) create_world(name string, dim Dimension) {
-	world := create_world(name, dim)
-	world_chunk := chunk.create_chunk(0, 0, false)
-	for i := 0; i < 16; i++ {
-		chunk_section := chunk.create_chunk_section(i)
-		world_chunk.set_section(chunk_section)
-	}
-	
-	world.set_chunk(world_chunk)
-	man.add_world(world)
 }

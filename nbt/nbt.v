@@ -1,5 +1,5 @@
 module nbt
-/*
+
 type Typ = byte
 type Nbt = NbtEnd | NbtByte | NbtShort | NbtInt | NbtLong | NbtFloat | NbtDouble | NbtByteArray | NbtCompound | NbtIntArray | NbtLongArray | INbt
 
@@ -173,4 +173,3 @@ pub fn (n NbtLongArray) typ() Typ {
 pub fn (n NbtLongArray) name() string {
 	return 'TAG_Long_Array'
 }
-*/
