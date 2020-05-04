@@ -8,6 +8,12 @@
 ## What is voxel?
 Voxel is a minecraft server written using the [V programming language](https://vlang.io).
 
+## Run voxel
+```bash
+git clone https://github.com/end-me/voxel
+v run .
+```
+
 ## Roadmap
 - [x] Reading packets
 - [x] Writing packets
