@@ -1,5 +1,5 @@
 module nbt
-/*
+
 struct Compacter {
 	bpb int
 	max int
@@ -25,7 +25,7 @@ pub fn (comp mut Compacter) set(index, val int) {
 
 	u_index := b_index ^ (s_index << 0x06)
 
-	prev_val := i64(u64(comp.values[s_index])>>u_index) & i64(comp.max)
+	mut prev_val := i64(u64(comp.values[s_index])>>u_index) & i64(comp.max)
 
 	comp.values[s_index] = comp.values[s_index]&i64((comp.max<<u_index)^-1) | i64((val&comp.max)<<u_index)
 
@@ -33,7 +33,7 @@ pub fn (comp mut Compacter) set(index, val int) {
 		z_index := 64 - u_index
 		p_index := comp.bpb - 1
 
-		mut prev_val |= (comp.values[e_index] << z_index) & i64(comp.max)
+		prev_val |= (comp.values[e_index] << z_index) & i64(comp.max)
 
 		comp.values[e_index] = i64(((u64(comp.values[e_index]) >> p_index) << p_index) | u64((val&comp.max)>>z_index))
 	}
@@ -47,11 +47,12 @@ pub fn (comp Compacter) get(index int) int {
 
 	u_index := b_index ^ (s_index << 0x06)
 
+
+	z_index := 64 - u_index
+
 	if z_index == e_index {
 		return int((u64(comp.values[s_index]) >> u_index) & u64(comp.max))
 	}
-
-	z_index := 64 - u_index
 
 	return int(u64(comp.values[z_index] >> u_index) & u64(comp.max))
 }
@@ -74,4 +75,4 @@ fn calc_slice(var0, var1 int) int {
 			return v0 + v1 - var2
 		}
 	}
-}*/
+}
