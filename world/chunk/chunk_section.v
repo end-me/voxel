@@ -1,8 +1,10 @@
 module chunk
 
+import io
+
 struct ChunkSection {
 mut:
-	block_count int
+	block_count i16
 	bit_per_block byte
 	blocks []&BlockSection
 }
@@ -32,4 +34,25 @@ pub fn (section mut ChunkSection) set_block(x, y, z, id int) {
 
 pub fn (section mut ChunkSection) get_block(x, y, z int) int {
 	return section.blocks[y].get_block(x, z)
+}
+
+pub fn (section mut ChunkSection) to_buffer() []byte {
+	writer := io.create_buf_writer()
+	writer.create_empty()
+
+
+	//Single data
+	writer.write_short(section.block_count)
+	writer.write_byte(section.bit_per_block)
+
+	mut buf := []i64{}
+	for block_section in section.blocks {
+		buf << block_section.blocks
+	}
+	writer.write_var_int(buf.len)
+	for long in buf {
+		writer.write_long(long)
+	}
+
+	return writer.buf
 }

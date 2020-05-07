@@ -8,17 +8,15 @@ enum Dimension {
 
 pub fn (dim Dimension) to_int() int {
 	match dim {
-		Nether {
+		.Nether {
 			return -1
 		}
-		Overworld {
+		.Overworld {
 			return 0
 		}
-		End {
+		.End {
 			return 1
 		}
-		else {
-			return 2
-		}
 	}
+	return 0
 }

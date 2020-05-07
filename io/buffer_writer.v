@@ -29,7 +29,6 @@ pub fn (writer mut BufferWriter) write_var_int(val int) {
 			tmp |= 0b10000000
 		}
 		writer.buf << byte(tmp)
-		println(data)
 		if data == 0 {
 			break
 		}
@@ -152,16 +151,16 @@ fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
 		nbt.NbtCompound {
 			val := it.val
 			for _, tag in val {
-				tagid := match_nbt_typ(tag)
-				tagname := match_nbt_name(tag)
+				tagid := get_typ(tag)
+				tagname := get_name(tag)
 				writer.write_byte(tagid)
 
-				if tagid == 0 {
+				if byte(tagid) == 0 {
 					continue
 				}
 
 				writer.write_nbt_text(tagname)
-				writer.write_nbt(tag)
+				writer.write_nbt_data(tag)
 			}
 		}
 		nbt.NbtLongArray {
@@ -171,34 +170,28 @@ fn (writer mut BufferWriter) write_nbt_data(data nbt.Nbt) {
 				writer.write_long(v)
 			}
 		}
-		else {
-			panic('unimplemented')
-		}
 	}
 }
 
-fn match_nbt_typ(nbt nbt.Nbt) byte {
-	match nbt {
+fn get_typ(data nbt.Nbt) nbt.Typ {
+	match data {
 		nbt.NbtEnd {
-			return byte(it.typ())
+			return it.typ()
 		}
 		nbt.NbtByte {
-			return byte(it.typ())
+			return it.typ()
 		}
 		nbt.NbtCompound {
-			return byte(it.typ())
+			return it.typ()
 		}
 		nbt.NbtLongArray {
-			return byte(it.typ())
-		}
-		else {
-			return -1
+			return it.typ()
 		}
 	}
 }
 
-fn match_nbt_name(nbt nbt.Nbt) string {
-	match nbt {
+fn get_name(data nbt.Nbt) string {
+	match data {
 		nbt.NbtEnd {
 			return it.name()
 		}
@@ -210,21 +203,12 @@ fn match_nbt_name(nbt nbt.Nbt) string {
 		}
 		nbt.NbtLongArray {
 			return it.name()
-		}
-		else {
-			return ''
 		}
 	}
 }
 
 fn (writer mut BufferWriter) write_nbt_text(data string) {
-	println(data.len)
 	writer.write_short(data.len)
-	for a in data.bytes() {
-		char := byte(a)
-		d := int(char)
-		println('$char -> $d')
-	}
 	writer.buf << data.bytes()
 }
 

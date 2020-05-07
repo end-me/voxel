@@ -4,7 +4,7 @@ import server
 import io
 
 pub fn (conn mut server.Connection) read_status_request() PacketStatusRequest {
-	reader, len, pkt_id := read_packet(conn.sock) or {
+	_, len, pkt_id := read_packet(conn.sock) or {
 		error(err)
 		return PacketStatusRequest{}
 	}
