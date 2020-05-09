@@ -10,7 +10,7 @@ struct Chunk {
 mut:
 	primary_bit_mask int
 	heightmap nbt.Compacter
-	biomes []int
+	//biomes []int
 	sections []&ChunkSection
 }
 
@@ -19,9 +19,8 @@ pub fn create_chunk(chunk_x, chunk_z int, full_chunk bool) &Chunk {
 		chunk_x: chunk_x
 		chunk_z: chunk_z
 		full_chunk: full_chunk
-		primary_bit_mask: 0
 		heightmap: nbt.create_new_compacter(9, 256)
-		biomes: []int{len: 16*16, cap: 16*16, default: 1}
+		//biomes: []int{len: 16*16, cap: 16*16, default: 1}
 		sections: []&ChunkSection{cap: 16}
 	}
 }
@@ -35,21 +34,15 @@ pub fn (chunk mut &Chunk) init() {
 }
 
 pub fn (chunk mut Chunk) set_block(x, y, z, id int) {
-	/*chunk_y, block_y := convert_chunk_y(y)
+	chunk_y, block_y := convert_chunk_y(y)
 	section := chunk.sections[chunk_y]
-	if id > 0 && section.block_count <= 0 {
-		chunk.primary_bit_mask |= 1 << chunk_y
-	} else {
-		chunk.primary_bit_mask ^= 1 << chunk_y
-	}
-	section.set_block(x, block_y, z, id)*/
+	section.set_block(x, block_y, z, id)
 }
 
 pub fn (chunk mut Chunk) get_block(x, y, z int) int {
-	/*chunk_y, block_y := convert_chunk_y(y)
+	chunk_y, block_y := convert_chunk_y(y)
 	section := chunk.sections[chunk_y]
-	return section.get_block(x, block_y, z)*/
-	return 0
+	return section.get_block(x, block_y, z)
 }
 
 pub fn (chunk mut Chunk) get_heightmap() nbt.NbtCompound {
@@ -68,6 +61,27 @@ pub fn convert_chunk_y(y int) (int, int) {
 	return chunk, y_in_chunk
 }
 
+fn (chunk mut Chunk) get_data() []byte {
+	writer := io.create_buf_writer()
+	writer.create_empty()
+
+	mut mask := int(0)
+
+	for i := 0; i < 16; i++ {
+		if chunk.sections.len < i {
+			break
+		}
+
+		mask |= 1 << i
+
+		section := chunk.sections[i]
+		section.write(writer)
+	}
+	writer.write_var_int(mask)
+
+	return writer.buf
+}
+
 pub fn (chunk mut Chunk) to_buffer() []byte {
 	writer := io.create_buf_writer()
 	writer.create_empty()
@@ -77,16 +91,26 @@ pub fn (chunk mut Chunk) to_buffer() []byte {
 	writer.write_int(chunk.chunk_z)
 	writer.write_bool(chunk.full_chunk)
 
+	reader := io.create_buf_reader()
+	buf := chunk.get_data()
+	reader.set_buffer_a(buf)
+
 	//Bits
-	writer.write_var_int(0)
+	bit_mask := reader.read_pure_var_int()
+
+	writer.write_var_int(bit_mask)
 	writer.write_nbt(chunk.get_heightmap())
 
 	//Biome
-	for biome in chunk.biomes {
+	/*for biome in chunk.biomes {
+		writer.write_int(biome)
+	}*/
+	biomes := []int{len: 1024, cap: 1024, default: 0}
+	for biome in biomes {
 		writer.write_int(biome)
 	}
 
-	mut data_buf := []byte{}
+/*	mut data_buf := []byte{}
 	for section in chunk.sections {
 		b := section.to_buffer()
 		data_buf << b
@@ -95,7 +119,10 @@ pub fn (chunk mut Chunk) to_buffer() []byte {
 	writer.write_var_int(data_buf.len)
 	for b in data_buf {
 		writer.write_byte(b)
-	}
+	}*/
+	writer.write_array(reader.buf)
+
+
 	writer.write_var_int(0)
 	
 	return writer.flush(0x22)

@@ -13,7 +13,7 @@ pub fn create_new_compacter(bits, size int) &Compacter {
 	return &Compacter{
 		bpb: bits
 		max: size
-		values: []i64{len: slice, cap: slice}
+		values: []i64{len: slice, cap: slice, default: 0}
 	}
 }
 

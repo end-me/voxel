@@ -5,7 +5,7 @@ import encoding.binary
 
 struct BufferReader {
 mut:
-	buf byteptr
+	buf []byte
 	offset int
 }
 
@@ -13,11 +13,19 @@ pub fn create_buf_reader() BufferReader {
 	return BufferReader{}
 }
 
-pub fn (reader mut BufferReader) set_buffer(buf byteptr) {
+pub fn (reader mut BufferReader) set_buffer(buf byteptr, len int) {
+	mut b := []byte{}
+	for i := 0; i < len; i++ {
+		b << buf[i]
+	}
+	reader.set(0, b)
+}
+
+pub fn (reader mut BufferReader) set_buffer_a(buf []byte) {
 	reader.set(0, buf)
 }
 
-pub fn (reader mut BufferReader) set(offset int, buf byteptr) {
+pub fn (reader mut BufferReader) set(offset int, buf []byte) {
 	reader.offset = 0
 	reader.buf = buf
 }

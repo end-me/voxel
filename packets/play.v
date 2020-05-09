@@ -40,10 +40,6 @@ pub fn (conn mut server.Connection) write_chunk(x, z int, server &server.Server,
 		buf = chunk.to_buffer()
 	}
 
-	for a in buf {
-		print('${int(a)} ')
-	}
-
 	conn.sock.send(buf.data, buf.len) or { panic(err) }
 }
 
