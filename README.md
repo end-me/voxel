@@ -11,6 +11,7 @@ Voxel is a minecraft server written using the [V programming language](https://v
 ## Run voxel
 ```bash
 git clone https://github.com/end-me/voxel
+cd voxel
 v run .
 ```
 
