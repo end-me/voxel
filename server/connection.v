@@ -52,7 +52,7 @@ fn (conn mut Connection) handle_status(json string) {
 
 fn (conn mut Connection) handle_login(server &Server, protocol_ver int) {
 	rand.seed(time.now().unix)
-	login_start := conn.read_login_start()
+	login_start := conn.read_login_start()<
 
 	conn.write_login_succesful('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', login_start.name)
 	name := login_start.name
